@@ -21,19 +21,23 @@ void Ball::update()
 
 void Ball::avancer()
 {
-    this->setOrientation(1,1);
-    this->setOrientation(2,1);
-
     this->setY(this->getY() + this->getVitesse() * getOrientation(1));
     this->setX(this->getX() + this->getVitesse() * getOrientation(2));
 }
 
-void Ball::rebonWindow()
+bool Ball::rebonWindow()
 {
-    if (this->getY() > 600)
+    if (this->getY() > 600 - this->getTail() || this->getY()<0)
     {
         this->setOrientation(1, this->getOrientation(1) * -1);
+        return false;
     }
+
+    else if (this->getX() > 800 - this->getTail() || this->getY()<0)
+    {
+        return true;
+    }
+    return false;
 }
 
 //get

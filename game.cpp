@@ -5,6 +5,8 @@ pong::pong() : m_raquetteLeft(20.f), m_raquetteRight(760.f), m_ball(nullptr)
     Raquette &raquetteLeft = m_raquetteLeft;
     Raquette &raquetteRight = m_raquetteRight;
 
+    srand(time(nullptr));
+
     m_ball = new Ball(300.f,400.f);
 }
 
@@ -24,6 +26,8 @@ void pong::game()
     this->m_raquetteLeft.setRaquetteNum(1);
     this->m_raquetteRight.setRaquetteNum(2);
 
+    this->m_ball->setOrientation(1,1);
+    this->m_ball->setOrientation(2,1);
     this->m_ball->setTail(10);
     this->m_ball->setX((this->largeur - this->m_ball->getTail()) /2);
     this->m_ball->setY((this->hauteur - this->m_ball->getTail()) /2);
@@ -45,8 +49,6 @@ void pong::gameLoop()
         if (this->event.type == sf::Event::Closed)
         {
             this->window.close();
-
-            delete m_ball;
         }
         if (event.type == sf::Event::KeyPressed)
         {
@@ -56,13 +58,16 @@ void pong::gameLoop()
         {
             m_raquetteLeft.input(event.key.code, false);
         }
-        this->m_ball->avancer();
-        this->m_ball->rebonWindow();
-
-        this->m_raquetteLeft.update(1);        
-        this->m_raquetteRight.update(2);
-        this->m_ball->update();
     }
+
+    this->m_ball->avancer();
+    this->m_ball->rebonWindow();
+
+    this->m_raquetteLeft.update(1);        
+    this->m_raquetteRight.update(2);
+    this->m_ball->update();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
 }
 
 void pong::gameAffichage()
@@ -74,4 +79,22 @@ void pong::gameAffichage()
     this->window.draw(m_ball->getBall());
 
     this->window.display();
+}
+
+void pong::reaparition()
+{
+    if (this->m_ball->rebonWindow())
+    {
+        delete m_ball;
+        m_ball = new Ball(300.f,400.f);
+
+        m_ball->setY((largeur + m_ball->getTail())/2);
+        m_ball->setX((hauteur + m_ball->getTail())/2);
+
+        m_ball->update();
+    }
+    else
+    {
+        m_ball->update();
+    }
 }

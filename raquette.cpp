@@ -9,8 +9,8 @@ Raquette::Raquette(float m_x)
     m_y;
     m_x;
     m_raquetteNum;
-    up[2] = {false};
-    down[2] = {false};
+    up[1] = {false};
+    down[1] = {false};
     m_raquette.setSize(sf::Vector2f(m_largeur, m_hauteur));
     m_raquette.setPosition(sf::Vector2f(m_y,m_x));
 }
@@ -21,21 +21,21 @@ void Raquette::input(sf::Keyboard::Key key, bool chekPressed)
     {
         if (key == sf::Keyboard::A)
             up[1] = true;
-        if (key == sf::Keyboard::Q)
+        else if (key == sf::Keyboard::Q)
             down[1] = true;
 
-        if (key == sf::Keyboard::P)
-            up[2] = true;
-        if (key == sf::Keyboard::M)
-            down[2] = true;
+        else if (key == sf::Keyboard::P)
+            up[0] = true;
+        else if (key == sf::Keyboard::M)
+            down[0] = true;
     }
     else if (chekPressed == false)
     {
         up[1] = false;
         down[1] = false;
 
-        up[2] = false;
-        down[2] = false;
+        up[0] = false;
+        down[0] = false;
     }
 }
 
@@ -43,11 +43,11 @@ void Raquette::update(int a)
 {
     if (up[a])
     {
-        setY(getY() - 1.f);
+        setY(getY() - 5.0f);
     }
     else if (down[a])
     {
-        setY(getY() + 1.0f);
+        setY(getY() + 5.0f);
     }
 
     m_raquette.setPosition(sf::Vector2f(getX(), getY()));

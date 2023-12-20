@@ -23,6 +23,7 @@ public:
     void game();
     void gameLoop();
     void gameAffichage();
+    void reaparition();
 
 };
 

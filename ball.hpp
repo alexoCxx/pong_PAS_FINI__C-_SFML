@@ -18,7 +18,7 @@ public :
     Ball(float m_y, float m_x);
     void avancer();
     void update();
-    void rebonWindow();
+    bool rebonWindow();
 
     //get
     float getTail();
