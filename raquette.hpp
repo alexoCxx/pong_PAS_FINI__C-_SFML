@@ -19,7 +19,7 @@ public:
     //fonction
     Raquette(float m_x);
     void input(sf::Keyboard::Key key, bool chekPressed);
-    void update(int a);
+    void update();
     void chekRebort();
 
     //get

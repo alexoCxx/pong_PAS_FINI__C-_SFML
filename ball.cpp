@@ -6,7 +6,7 @@ Ball::Ball(float m_x, float m_y)
     m_tail = 10.f;
     m_y;
     m_x;
-    m_vitesse = 2;
+    m_vitesse = 1;
     m_orientation[2];
     m_rePos;
     ball.setRadius(m_tail);
@@ -30,14 +30,7 @@ bool Ball::rebonWindow()
     if (this->getY() > 600 - this->getTail() || this->getY()<0)
     {
         this->setOrientation(1, this->getOrientation(1) * -1);
-        return false;
     }
-
-    else if (this->getX() > 800 - this->getTail() || this->getY()<0)
-    {
-        return true;
-    }
-    return false;
 }
 
 //get

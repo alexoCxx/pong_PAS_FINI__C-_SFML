@@ -17,6 +17,9 @@ pong::~pong()
 
 void pong::game()
 {
+    this->j1 = 0;
+    this->j2 = 0;
+
     this->m_raquetteLeft.setHauteur(100);
     this->m_raquetteRight.setLargeur(20);
     this->m_raquetteLeft.setX(20.f);
@@ -53,27 +56,36 @@ void pong::gameLoop()
         if (event.type == sf::Event::KeyPressed)
         {
             m_raquetteLeft.input(event.key.code, true);
+            m_raquetteRight.input(event.key.code, true);
         }
         if (event.type == sf::Event::KeyReleased)
         {
             m_raquetteLeft.input(event.key.code, false);
+            m_raquetteRight.input(event.key.code, false);
         }
     }
+    this->affichageScore(score, std::to_string(j1) + " | " + std::to_string(j2));
 
     this->m_ball->avancer();
     this->m_ball->rebonWindow();
+    this->reaparition();
+    this->rebond(m_raquetteRight, m_raquetteLeft);
 
-    this->m_raquetteLeft.update(1);        
-    this->m_raquetteRight.update(2);
+    this->chekInput();
+    this->m_raquetteLeft.update();        
+    this->m_raquetteRight.update();
     this->m_ball->update();
+    this->m_raquetteLeft.chekRebort();
+    this->m_raquetteRight.chekRebort();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 void pong::gameAffichage()
 {
-    this->window.clear(sf::Color(0,0,0));
+    this->changementDeCouleur();
 
+    this->window.draw(this->score);
     this->window.draw(m_raquetteRight.getRaquette());
     this->window.draw(m_raquetteLeft.getRaquette());
     this->window.draw(m_ball->getBall());
@@ -83,18 +95,85 @@ void pong::gameAffichage()
 
 void pong::reaparition()
 {
-    if (this->m_ball->rebonWindow())
+    if (m_ball->getX() > 800 - m_ball->getTail())
     {
         delete m_ball;
-        m_ball = new Ball(300.f,400.f);
+        m_ball = new Ball(400.f,300.f);
 
-        m_ball->setY((largeur + m_ball->getTail())/2);
-        m_ball->setX((hauteur + m_ball->getTail())/2);
+        m_ball->setX((largeur + m_ball->getTail())/2);
+        m_ball->setY((hauteur + m_ball->getTail())/2);
+        m_ball->setOrientation(1,1);
+        m_ball->setOrientation(2,1);
 
-        m_ball->update();
+        this->j1++;
     }
-    else
+    else if (m_ball->getX()<0)
     {
-        m_ball->update();
+        delete m_ball;
+        m_ball = new Ball(400.f,300.f);
+
+        m_ball->setX((largeur + m_ball->getTail())/2);
+        m_ball->setY((hauteur + m_ball->getTail())/2);
+        m_ball->setOrientation(1,1);
+        m_ball->setOrientation(2,1);
+
+        this->j2++;
     }
+}
+
+void pong::chekInput()
+{
+    if(this->m_raquetteLeft.getDown(1))
+    {
+        this->m_raquetteLeft.setY(this->m_raquetteLeft.getY() + 5.0f);
+    }
+    if(this->m_raquetteLeft.getUp(1))
+    {
+        this->m_raquetteLeft.setY(this->m_raquetteLeft.getY() - 5.0f);
+    }
+
+    if(this->m_raquetteRight.getDown(0))
+    {
+        this->m_raquetteRight.setY(this->m_raquetteRight.getY() + 5.0f);
+    }
+    if(this->m_raquetteRight.getUp(0))
+    {
+        this->m_raquetteRight.setY(this->m_raquetteRight.getY() - 5.0f);
+    }
+}
+
+void pong::rebond(Raquette droit, Raquette gauche)
+{
+    if (m_ball->getY() > gauche.getY() && m_ball->getY() < gauche.getY() + gauche.getHauteur() && m_ball->getX() == gauche.getX() + gauche.getLargeur()
+    || m_ball->getY() > droit.getY() && m_ball->getY() < droit.getY() + droit.getHauteur() && m_ball->getX() + m_ball->getTail() == droit.getX())
+    {
+        m_ball->setOrientation(2, m_ball->getOrientation(2) * -1);
+    }
+}
+
+void pong::changementDeCouleur()
+{
+    int r = 0;
+    int g = 0;
+    int b = 0;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+    {
+        r = 80;
+        g = 200;
+        b = 255;
+    }
+
+    window.clear(sf::Color(r,g,b));
+}
+
+void pong::affichageScore(sf::Text &txt,sf::String str)
+{
+    font.loadFromFile("ressource/arial_narrow_7.ttf");
+
+    txt.setFont(font);
+    txt.setString(str);
+    txt.setCharacterSize(26);
+    txt.setFillColor(sf::Color::White);
+    txt.setPosition((largeur / 2) - 40, 10);
 }

@@ -8,7 +8,7 @@ private :
     float m_tail;
     float m_y;
     float m_x;
-    float m_vitesse = 2;
+    float m_vitesse = 1;
     double m_orientation[2] = {1,1};
     bool m_rePos;
     sf::CircleShape ball;

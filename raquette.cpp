@@ -3,7 +3,7 @@
 //fonction
 Raquette::Raquette(float m_x)
 {
-    m_vitesse;
+    m_vitesse = 2;
     m_hauteur = 100.f;
     m_largeur = 20.f;
     m_y;
@@ -19,15 +19,15 @@ void Raquette::input(sf::Keyboard::Key key, bool chekPressed)
 {
     if (chekPressed == true)
     {
-        if (key == sf::Keyboard::A)
-            up[1] = true;
-        else if (key == sf::Keyboard::Q)
-            down[1] = true;
-
-        else if (key == sf::Keyboard::P)
+        if (key == sf::Keyboard::P)
             up[0] = true;
         else if (key == sf::Keyboard::M)
             down[0] = true;
+
+        else if (key == sf::Keyboard::A)
+            up[1] = true;
+        else if (key == sf::Keyboard::Q)
+            down[1] = true;
     }
     else if (chekPressed == false)
     {
@@ -39,24 +39,13 @@ void Raquette::input(sf::Keyboard::Key key, bool chekPressed)
     }
 }
 
-void Raquette::update(int a)
+void Raquette::update()
 {
-    if (up[a])
-    {
-        setY(getY() - 5.0f);
-    }
-    else if (down[a])
-    {
-        setY(getY() + 5.0f);
-    }
-
-    m_raquette.setPosition(sf::Vector2f(getX(), getY()));
+    this->m_raquette.setPosition(sf::Vector2f(getX(), getY()));
 }
 
 void Raquette::chekRebort()
 {
-    std::cout << this->getY() << std::endl;
-
     if (this->getY() <= 0)
     {
         this->setY(0);
